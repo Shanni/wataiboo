@@ -1,14 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
-const agents = [
-    { name: "Agent A", description: "Description of Agent A" },
-    { name: "Agent B", description: "Description of Agent B" },
-    { name: "Agent C", description: "Description of Agent C" },
-];
-
 const AgentList = () => {
-    return (
+
         <Container>
             <h1 className="my-4">AI Agent Catalog</h1>
             <Row>

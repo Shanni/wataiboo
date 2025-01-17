@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, ButtonGroup, Badge, Spinner, Alert, Carousel } from 'react-bootstrap';
 import { productHuntService } from '../services/productHuntService';
+import AgentDetailModal from './AgentDetailModal';
 
 const AgentList = () => {
     const [agents, setAgents] = useState([]);
@@ -9,26 +10,34 @@ const AgentList = () => {
     const [category, setCategory] = useState('all');
     const [priceFilter, setPriceFilter] = useState('all');
     const [viewMode, setViewMode] = useState('cards');
+    const [selectedAgent, setSelectedAgent] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        fetchAgents();
+        fetchAgentsFromProductHunt();
     }, []);
 
-    const fetchAgents = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/api/producthunt/ai-tools');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            const agentArray = data.data.posts.edges || [];
-            console.log('fetched number of agents', agentArray.length);
-            setAgents(agentArray);
-            setLoading(false);
-        } catch (error) {
-            setError(error.message);
-            setLoading(false);
-        }
+    // const fetchAgents = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:3000/api/producthunt/ai-tools');
+    //         if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //         }
+    //         const data = await response.json();
+    //         const agentArray = data.data.posts.edges || [];
+    //         console.log('fetched number of agents', agentArray.length);
+    //         setAgents(agentArray);
+    //         setLoading(false);
+    //     } catch (error) {
+    //         setError(error.message);
+    //         setLoading(false);
+    //     }
+    // };
+
+    const fetchAgentsFromProductHunt = async () => {
+        const data = await productHuntService.searchAITools();
+        setAgents(data.posts.edges);
+        setLoading(false);
     };
 
     const getMediaUrls = (media) => {
@@ -90,7 +99,7 @@ const AgentList = () => {
                         </Form.Select>
                     </Col>
                     <Col md={3}>
-                        <Button variant="primary" onClick={fetchAgents}>Refresh Data</Button>
+                        <Button variant="primary" onClick={fetchAgentsFromProductHunt}>Refresh Data</Button>
                     </Col>
                     <Col md={3}>
                         <ButtonGroup className="w-100">
@@ -152,7 +161,10 @@ const AgentList = () => {
                                             <Button 
                                                 variant="outline-secondary" 
                                                 size="sm"
-                                                onClick={() => alert(item.node.description)}
+                                                onClick={() => {
+                                                    setSelectedAgent(item);
+                                                    setShowModal(true);
+                                                }}
                                             >
                                                 More Info
                                             </Button>
@@ -183,6 +195,12 @@ const AgentList = () => {
                     {JSON.stringify(agents, null, 2)}
                 </pre>
             )}
+
+            <AgentDetailModal 
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                agent={selectedAgent}
+            />
         </Container>
     );
 };
