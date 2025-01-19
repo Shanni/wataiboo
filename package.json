@@ -21,8 +21,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "vercel-build": "GENERATE_SOURCEMAP=false react-scripts build && yarn run postbuild",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postbuild": "terser-webpack-plugin --config webpack.config.js"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +43,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1",
+    "terser-webpack-plugin": "^5.3.11",
+    "webpack-obfuscator": "^3.5.1"
   }
 }
