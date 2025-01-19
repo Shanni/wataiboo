@@ -12,32 +12,32 @@ const AgentList = () => {
     const [viewMode, setViewMode] = useState('cards');
     const [selectedAgent, setSelectedAgent] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         fetchAgentsFromProductHunt();
     }, []);
 
-    // const fetchAgents = async () => {
-    //     try {
-    //         const response = await fetch('http://localhost:3000/api/producthunt/ai-tools');
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //         const data = await response.json();
-    //         const agentArray = data.data.posts.edges || [];
-    //         console.log('fetched number of agents', agentArray.length);
-    //         setAgents(agentArray);
-    //         setLoading(false);
-    //     } catch (error) {
-    //         setError(error.message);
-    //         setLoading(false);
-    //     }
-    // };
-
     const fetchAgentsFromProductHunt = async () => {
-        const data = await productHuntService.searchAITools();
-        setAgents(data.posts.edges);
-        setLoading(false);
+        try {
+            const data = await productHuntService.searchAITools();
+            setAgents(data.posts.edges);
+            
+            // Extract unique categories from all agents
+            const allCategories = new Set();
+            data.posts.edges.forEach(item => {
+                if (item.node.topics?.edges) {
+                    item.node.topics.edges.forEach(topic => {
+                        allCategories.add(topic.node.name);
+                    });
+                }
+            });
+            setCategories(Array.from(allCategories).sort());
+            setLoading(false);
+        } catch (error) {
+            setError(error.message);
+            setLoading(false);
+        }
     };
 
     const getMediaUrls = (media) => {
@@ -49,6 +49,12 @@ const AgentList = () => {
         if (!topics?.edges) return [];
         return topics.edges.map(edge => edge.node.name);
     };
+
+    const filteredAgents = agents.filter(item => {
+        const agentTopics = getTopics(item.node.topics);
+        const categoryMatch = category === 'all' || agentTopics.includes(category);
+        return categoryMatch;
+    });
 
     if (loading) {
         return (
@@ -80,12 +86,11 @@ const AgentList = () => {
                             onChange={(e) => setCategory(e.target.value)}
                         >
                             <option value="all">All Categories</option>
-                            <option value="writing">Writing</option>
-                            <option value="coding">Coding</option>
-                            <option value="image">Image Generation</option>
-                            <option value="analysis">Data Analysis</option>
-                            <option value="search">Search</option>
-                            <option value="video">Video</option>
+                            {categories.map((cat, index) => (
+                                <option key={index} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
                         </Form.Select>
                     </Col>
                     <Col md={3}>
@@ -99,7 +104,9 @@ const AgentList = () => {
                         </Form.Select>
                     </Col>
                     <Col md={3}>
-                        <Button variant="primary" onClick={fetchAgentsFromProductHunt}>Refresh Data</Button>
+                        <Button variant="primary" onClick={fetchAgentsFromProductHunt}>
+                            Refresh Data
+                        </Button>
                     </Col>
                     <Col md={3}>
                         <ButtonGroup className="w-100">
@@ -122,7 +129,7 @@ const AgentList = () => {
 
             {viewMode === 'cards' ? (
                 <Row>
-                    {agents.map((item) => (
+                    {filteredAgents.map((item) => (
                         <Col key={item.node.id} sm={12} md={6} lg={4} className="mb-4">
                             <Card className="h-100">
                                 {item.node.media && item.node.media.length > 0 && (
@@ -148,6 +155,8 @@ const AgentList = () => {
                                                 key={index} 
                                                 bg="info" 
                                                 className="me-1 mb-1"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => setCategory(topic)}
                                             >
                                                 {topic}
                                             </Badge>
@@ -192,7 +201,7 @@ const AgentList = () => {
                 </Row>
             ) : (
                 <pre className="bg-light p-3 rounded">
-                    {JSON.stringify(agents, null, 2)}
+                    {JSON.stringify(filteredAgents, null, 2)}
                 </pre>
             )}
 
