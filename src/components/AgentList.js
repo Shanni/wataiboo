@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Form, Button, ButtonGroup, Badge, Spinner, A
 import { productHuntService } from '../services/productHuntService';
 import AgentDetailModal from './AgentDetailModal';
 import { MAIN_CATEGORIES, TOPIC_TO_CATEGORY_MAP } from '../config/categories';
+import { FEATURES } from '../config/featureFlags';
 
 const AgentList = () => {
     const [agents, setAgents] = useState([]);
@@ -206,9 +207,12 @@ const AgentList = () => {
                                             ))}
                                         </div>
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <Badge bg="secondary">
-                                                Votes: {item.node.votesCount}
-                                            </Badge>
+                                            {FEATURES.SHOW_VOTES && (
+                                                <Badge bg="secondary">
+                                                    Votes: {item.node.votesCount}
+                                                </Badge>
+                                            )}
+                                            {!FEATURES.SHOW_VOTES && <div />}
                                             {item.node.description && (
                                                 <Button 
                                                     variant="outline-secondary" 
