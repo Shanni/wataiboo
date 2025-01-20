@@ -7,7 +7,10 @@ import { MAIN_CATEGORIES, TOPIC_TO_CATEGORY_MAP } from '../config/categories';
 const AgentList = () => {
     const [agents, setAgents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState(null);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    const [endCursor, setEndCursor] = useState(null);
     const [category, setCategory] = useState('all');
     const [priceFilter, setPriceFilter] = useState('all');
     const [viewMode, setViewMode] = useState('cards');
@@ -19,14 +22,26 @@ const AgentList = () => {
         fetchAgentsFromProductHunt();
     }, []);
 
-    const fetchAgentsFromProductHunt = async () => {
+    const fetchAgentsFromProductHunt = async (cursor = null) => {
         try {
-            const data = await productHuntService.searchAITools();
-            setAgents(data.posts.edges);
+            const data = await productHuntService.searchAITools(cursor);
+            const newAgents = data.posts.edges;
             
-            // Extract unique categories from all agents
+            if (cursor) {
+                // Append new agents to existing list
+                setAgents(prevAgents => [...prevAgents, ...newAgents]);
+            } else {
+                // Reset list with new agents
+                setAgents(newAgents);
+            }
+            
+            // Update pagination info
+            setHasNextPage(data.posts.pageInfo.hasNextPage);
+            setEndCursor(data.posts.pageInfo.endCursor);
+            
+            // Extract categories (if needed)
             const allCategories = new Set();
-            data.posts.edges.forEach(item => {
+            newAgents.forEach(item => {
                 if (item.node.topics?.edges) {
                     item.node.topics.edges.forEach(topic => {
                         allCategories.add(topic.node.name);
@@ -34,10 +49,20 @@ const AgentList = () => {
                 }
             });
             setCategories(Array.from(allCategories).sort());
+            
             setLoading(false);
+            setLoadingMore(false);
         } catch (error) {
             setError(error.message);
             setLoading(false);
+            setLoadingMore(false);
+        }
+    };
+
+    const loadMore = () => {
+        if (hasNextPage && !loadingMore) {
+            setLoadingMore(true);
+            fetchAgentsFromProductHunt(endCursor);
         }
     };
 
@@ -141,81 +166,109 @@ const AgentList = () => {
             </div>
 
             {viewMode === 'cards' ? (
-                <Row>
-                    {filteredAgents.map((item) => (
-                        <Col key={item.node.id} sm={12} md={6} lg={4} className="mb-4">
-                            <Card className="h-100">
-                                {item.node.media && item.node.media.length > 0 && (
-                                    <Carousel interval={null} className="card-carousel">
-                                        {getMediaUrls(item.node.media).map((url, index) => (
-                                            <Carousel.Item key={index}>
-                                                <img
-                                                    className="d-block w-100"
-                                                    src={url}
-                                                    alt={`${item.node.name} - ${index + 1}`}
-                                                    style={{ height: '200px', objectFit: 'cover' }}
-                                                />
-                                            </Carousel.Item>
-                                        ))}
-                                    </Carousel>
-                                )}
-                                <Card.Body>
-                                    <Card.Title>{item.node.name}</Card.Title>
-                                    <Card.Text>{item.node.tagline}</Card.Text>
-                                    <div className="mb-2">
-                                        <Badge 
-                                            bg="primary" 
-                                            className="me-2 mb-2"
-                                        >
-                                            {getMainCategory(item.node.topics)}
-                                        </Badge>
-                                        {getTopics(item.node.topics).map((topic, index) => (
+                <>
+                    <Row>
+                        {filteredAgents.map((item) => (
+                            <Col key={item.node.id} sm={12} md={6} lg={4} className="mb-4">
+                                <Card className="h-100">
+                                    {item.node.media && item.node.media.length > 0 && (
+                                        <Carousel interval={null} className="card-carousel">
+                                            {getMediaUrls(item.node.media).map((url, index) => (
+                                                <Carousel.Item key={index}>
+                                                    <img
+                                                        className="d-block w-100"
+                                                        src={url}
+                                                        alt={`${item.node.name} - ${index + 1}`}
+                                                        style={{ height: '200px', objectFit: 'cover' }}
+                                                    />
+                                                </Carousel.Item>
+                                            ))}
+                                        </Carousel>
+                                    )}
+                                    <Card.Body>
+                                        <Card.Title>{item.node.name}</Card.Title>
+                                        <Card.Text>{item.node.tagline}</Card.Text>
+                                        <div className="mb-2">
                                             <Badge 
-                                                key={index} 
-                                                bg="info" 
-                                                className="me-1 mb-1"
+                                                bg="primary" 
+                                                className="me-2 mb-2"
                                             >
-                                                {topic}
+                                                {getMainCategory(item.node.topics)}
                                             </Badge>
-                                        ))}
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <Badge bg="secondary">
-                                            Votes: {item.node.votesCount}
-                                        </Badge>
-                                        {item.node.description && (
+                                            {getTopics(item.node.topics).map((topic, index) => (
+                                                <Badge 
+                                                    key={index} 
+                                                    bg="info" 
+                                                    className="me-1 mb-1"
+                                                >
+                                                    {topic}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <Badge bg="secondary">
+                                                Votes: {item.node.votesCount}
+                                            </Badge>
+                                            {item.node.description && (
+                                                <Button 
+                                                    variant="outline-secondary" 
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setSelectedAgent(item);
+                                                        setShowModal(true);
+                                                    }}
+                                                >
+                                                    More Info
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </Card.Body>
+                                    <Card.Footer className="text-muted">
+                                        <small>
+                                            Created: {new Date(item.node.createdAt).toLocaleDateString()}
+                                        </small>
+                                        {item.node.website && (
                                             <Button 
-                                                variant="outline-secondary" 
-                                                size="sm"
-                                                onClick={() => {
-                                                    setSelectedAgent(item);
-                                                    setShowModal(true);
-                                                }}
+                                                variant="link" 
+                                                href={item.node.website} 
+                                                target="_blank"
+                                                className="float-end"
                                             >
-                                                More Info
+                                                Visit Website
                                             </Button>
                                         )}
-                                    </div>
-                                </Card.Body>
-                                <Card.Footer className="text-muted">
-                                    <small>
-                                        Created: {new Date(item.node.createdAt).toLocaleDateString()}
-                                    </small>
-                                    {item.node.website && (
-                                        <Button 
-                                            variant="link" 
-                                            href={item.node.website} 
-                                            target="_blank"
-                                            className="float-end"
-                                        >
-                                            Visit Website
-                                        </Button>
-                                    )}
-                                </Card.Footer>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+                                    </Card.Footer>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    
+                    {hasNextPage && (
+                        <div className="text-center my-4">
+                            <Button 
+                                variant="outline-primary" 
+                                onClick={loadMore}
+                                disabled={loadingMore}
+                            >
+                                {loadingMore ? (
+                                    <>
+                                        <Spinner
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                            className="me-2"
+                                        />
+                                        Loading more...
+                                    </>
+                                ) : (
+                                    'Load More'
+                                )}
+                            </Button>
+                        </div>
+                    )}
+                </>
             ) : (
                 <pre className="bg-light p-3 rounded">
                     {JSON.stringify(filteredAgents, null, 2)}

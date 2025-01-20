@@ -10,10 +10,14 @@ class ProductHuntService {
         };
     }
 
-    async searchAITools(limit = 20, page = 1) {
+    async searchAITools(cursor = null, limit = 20) {
         const query = gql`
-            query MyQuery {
-                posts(order: RANKING, topic: "268") {
+            query MyQuery($after: String) {
+                posts(order: RANKING, topic: "268", first: ${limit}, after: $after) {
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                    }
                     totalCount
                     edges {
                         node {
@@ -49,7 +53,12 @@ class ProductHuntService {
         `;
 
         try {
-            const data = await request(PRODUCT_HUNT_API, query, {}, this.headers);
+            const data = await request(
+                PRODUCT_HUNT_API, 
+                query, 
+                { after: cursor },
+                this.headers
+            );
             return data;
         } catch (error) {
             console.error('Error fetching AI tools:', error);
