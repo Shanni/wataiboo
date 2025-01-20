@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, ButtonGroup, Badge, Spinner, Alert, Carousel } from 'react-bootstrap';
 import { productHuntService } from '../services/productHuntService';
 import AgentDetailModal from './AgentDetailModal';
+import { MAIN_CATEGORIES, TOPIC_TO_CATEGORY_MAP } from '../config/categories';
 
 const AgentList = () => {
     const [agents, setAgents] = useState([]);
@@ -50,10 +51,22 @@ const AgentList = () => {
         return topics.edges.map(edge => edge.node.name);
     };
 
+    const getMainCategory = (topics) => {
+        if (!topics?.edges) return null;
+        
+        // Try to find the first matching main category
+        for (const topic of topics.edges) {
+            const mainCategory = TOPIC_TO_CATEGORY_MAP[topic.node.name];
+            if (mainCategory) return mainCategory;
+        }
+        
+        // Default to AI & Machine Learning if no match found
+        return MAIN_CATEGORIES.AI_TOOLS;
+    };
+
     const filteredAgents = agents.filter(item => {
-        const agentTopics = getTopics(item.node.topics);
-        const categoryMatch = category === 'all' || agentTopics.includes(category);
-        return categoryMatch;
+        const mainCategory = getMainCategory(item.node.topics);
+        return category === 'all' || mainCategory === category;
     });
 
     if (loading) {
@@ -86,8 +99,8 @@ const AgentList = () => {
                             onChange={(e) => setCategory(e.target.value)}
                         >
                             <option value="all">All Categories</option>
-                            {categories.map((cat, index) => (
-                                <option key={index} value={cat}>
+                            {Object.values(MAIN_CATEGORIES).map((cat) => (
+                                <option key={cat} value={cat}>
                                     {cat}
                                 </option>
                             ))}
@@ -150,13 +163,17 @@ const AgentList = () => {
                                     <Card.Title>{item.node.name}</Card.Title>
                                     <Card.Text>{item.node.tagline}</Card.Text>
                                     <div className="mb-2">
+                                        <Badge 
+                                            bg="primary" 
+                                            className="me-2 mb-2"
+                                        >
+                                            {getMainCategory(item.node.topics)}
+                                        </Badge>
                                         {getTopics(item.node.topics).map((topic, index) => (
                                             <Badge 
                                                 key={index} 
                                                 bg="info" 
                                                 className="me-1 mb-1"
-                                                style={{ cursor: 'pointer' }}
-                                                onClick={() => setCategory(topic)}
                                             >
                                                 {topic}
                                             </Badge>
