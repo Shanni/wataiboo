@@ -4,11 +4,11 @@ import { FaSearch, FaRobot } from 'react-icons/fa';
 
 const Navigation = () => {
     return (
-        <Navbar expand="lg" className="custom-navbar">
+        <Navbar expand="lg" className="custom-navbar sticky-top">
             <Container>
                 <Navbar.Brand href="#home" className="d-flex align-items-center">
                     <FaRobot className="brand-icon me-2" />
-                    <span className="brand-text">AI Agents Directory</span>
+                    <span className="brand-text">Zinna</span>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -17,7 +17,7 @@ const Navigation = () => {
                         <Nav.Link href="#agents" className="nav-link-custom">Agents</Nav.Link>
                         <Nav.Link href="#categories" className="nav-link-custom">Categories</Nav.Link>
                     </Nav>
-                    <Form className="d-flex">
+                    <Form className="d-flex mt-2 mt-lg-0">
                         <InputGroup>
                             <InputGroup.Text className="search-icon">
                                 <FaSearch />

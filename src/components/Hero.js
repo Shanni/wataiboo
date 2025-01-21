@@ -9,21 +9,21 @@ const Hero = () => {
                 <Row className="align-items-center">
                     <Col lg={8} className="text-center text-lg-start">
                         <h1 className="hero-title">Discover the Best AI Agents</h1>
-                        <p className="hero-subtitle">
+                        <p className="hero-subtitle px-3 px-lg-0">
                             Explore our curated collection of cutting-edge AI tools and agents
                         </p>
                         <div className="hero-features">
                             <div className="feature">
                                 <FaRobot className="feature-icon" />
-                                <span>Smart Automation</span>
+                                <span className="feature-text">Smart Automation</span>
                             </div>
                             <div className="feature">
                                 <FaMagic className="feature-icon" />
-                                <span>Powerful Tools</span>
+                                <span className="feature-text">Powerful Tools</span>
                             </div>
                             <div className="feature">
                                 <FaBrain className="feature-icon" />
-                                <span>AI-Powered</span>
+                                <span className="feature-text">AI-Powered</span>
                             </div>
                         </div>
                     </Col>
