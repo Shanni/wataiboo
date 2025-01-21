@@ -331,3 +331,26 @@ body {
     border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 }
+
+
+/* Navigation hide/show animation */
+.custom-navbar {
+  transition: transform 0.3s ease-in-out;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-visible {
+  transform: translateY(0);
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
+}
+
+/* Add some padding to the body to prevent content from jumping when navbar becomes fixed */
+body {
+  padding-top: 60px;
+}

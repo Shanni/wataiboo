@@ -119,7 +119,7 @@ const AgentList = () => {
         <Container>
             <div className="filter-section mb-4">
                 <Row className="align-items-center">
-                    <Col md={3}>
+                    <Col md={FEATURES.SHOW_REFRESH ? 3 : 4}>
                         <Form.Select 
                             value={category} 
                             onChange={(e) => setCategory(e.target.value)}
@@ -132,7 +132,7 @@ const AgentList = () => {
                             ))}
                         </Form.Select>
                     </Col>
-                    <Col md={3}>
+                    <Col md={FEATURES.SHOW_REFRESH ? 3 : 4}>
                         <Form.Select 
                             value={priceFilter} 
                             onChange={(e) => setPriceFilter(e.target.value)}
@@ -142,12 +142,14 @@ const AgentList = () => {
                             <option value="paid">Paid</option>
                         </Form.Select>
                     </Col>
-                    <Col md={3}>
-                        <Button variant="primary" onClick={fetchAgentsFromProductHunt}>
-                            Refresh Data
-                        </Button>
-                    </Col>
-                    <Col md={3}>
+                    {FEATURES.SHOW_REFRESH && (
+                        <Col md={3}>
+                            <Button variant="primary" onClick={fetchAgentsFromProductHunt}>
+                                Refresh Data
+                            </Button>
+                        </Col>
+                    )}
+                    <Col md={FEATURES.SHOW_REFRESH ? 3 : 4}>
                         <ButtonGroup className="w-100">
                             <Button 
                                 variant={viewMode === 'cards' ? 'primary' : 'outline-primary'}
