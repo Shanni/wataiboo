@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch, FaRobot } from 'react-icons/fa';
 
@@ -25,16 +26,38 @@ const Navigation = () => {
             className={`custom-navbar sticky-top ${visible ? 'navbar-visible' : 'navbar-hidden'}`}
         >
             <Container>
-                <Navbar.Brand href="#home" className="d-flex align-items-center">
+                <NavLink to="/" className="navbar-brand d-flex align-items-center">
                     <FaRobot className="brand-icon me-2" />
                     <span className="brand-text">AI Agents Directory</span>
-                </Navbar.Brand>
+                </NavLink>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#home" className="nav-link-custom">Home</Nav.Link>
-                        <Nav.Link href="#agents" className="nav-link-custom">Agents</Nav.Link>
-                        <Nav.Link href="#categories" className="nav-link-custom">Categories</Nav.Link>
+                        <NavLink 
+                            to="/" 
+                            className={({isActive}) => 
+                                `nav-link nav-link-custom ${isActive ? 'active' : ''}`
+                            }
+                            end
+                        >
+                            Home
+                        </NavLink>
+                        <NavLink 
+                            to="/agents" 
+                            className={({isActive}) => 
+                                `nav-link nav-link-custom ${isActive ? 'active' : ''}`
+                            }
+                        >
+                            Agents
+                        </NavLink>
+                        <NavLink 
+                            to="/token" 
+                            className={({isActive}) => 
+                                `nav-link nav-link-custom ${isActive ? 'active' : ''}`
+                            }
+                        >
+                            Token
+                        </NavLink>
                     </Nav>
                     <Form className="d-flex mt-2 mt-lg-0">
                         <InputGroup>

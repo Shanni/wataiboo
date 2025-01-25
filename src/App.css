@@ -258,15 +258,35 @@ footer {
 }
 
 .nav-link-custom {
-  font-weight: 500;
   color: #2d3748;
-  margin: 0 0.5rem;
-  transition: all 0.3s ease;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
 }
 
 .nav-link-custom:hover {
   color: #667eea;
-  transform: translateY(-1px);
+}
+
+.nav-link-custom.active {
+  color: #667eea !important;
+  font-weight: 600;
+  position: relative;
+}
+
+.nav-link-custom.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Ensure the navbar brand link doesn't have the default underline */
+.navbar-brand {
+  text-decoration: none;
 }
 
 .search-input {
@@ -353,4 +373,69 @@ body {
 /* Add some padding to the body to prevent content from jumping when navbar becomes fixed */
 body {
   padding-top: 60px;
+}
+
+/* Token Feature Cards */
+.token-feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.token-feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.investment-steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+}
+
+.investment-steps li {
+    position: relative;
+    padding-left: 3rem;
+    counter-increment: step;
+}
+
+.investment-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Distribution Table */
+.table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.table td {
+    vertical-align: middle;
 }
