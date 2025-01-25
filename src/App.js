@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import AgentList from './components/AgentList';
 import TokenInfo from './components/TokenInfo';
+import WhitePaper from './components/WhitePaper';
 import { Analytics } from "@vercel/analytics/react"
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 } />
                 <Route path="/agents" element={<AgentList />} />
                 <Route path="/token" element={<TokenInfo />} />
+                <Route path="/whitepaper" element={<WhitePaper />} />
             </Routes>
             <footer className="py-3 mt-4 bg-dark text-white text-center">
                 <p>&copy; 2025 AI Agents Directory. All rights reserved.</p>

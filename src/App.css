@@ -439,3 +439,36 @@ body {
 .table td {
     vertical-align: middle;
 }
+
+/* Whitepaper Styles */
+.roadmap-item {
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid #667eea;
+}
+
+.roadmap-item h5 {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #667eea;
+}
+
+/* Card hover effects */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}

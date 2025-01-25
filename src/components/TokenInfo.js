@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaCoins, FaChartLine, FaHandshake, FaShieldAlt } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 
 const TokenInfo = () => {
     return (
@@ -93,9 +94,9 @@ const TokenInfo = () => {
                                 </li>
                             </ol>
                             <div className="text-center mt-4">
-                                <Button variant="primary" size="lg" href="#whitepaper">
+                                <NavLink to="/whitepaper" className="btn btn-primary btn-lg">
                                     Read Whitepaper
-                                </Button>
+                                </NavLink>
                             </div>
                         </Card.Body>
                     </Card>
