@@ -12,7 +12,7 @@ const WhitePaper = () => {
                         A Decentralized Platform for AI Agent Discovery and Integration
                     </p>
                     <div className="text-muted mb-4">
-                        Version 1.0 - March 2024
+                        Version 1.0 - January 2025
                     </div>
                 </Col>
             </Row>
@@ -111,7 +111,7 @@ const WhitePaper = () => {
                             </h3>
                             <div className="roadmap">
                                 <div className="roadmap-item mb-4">
-                                    <h5>Phase 1: Foundation (Q2 2024)</h5>
+                                    <h5>Phase 1: Foundation (Q1 2025)</h5>
                                     <ul className="list-unstyled">
                                         <li className="mb-2">• Platform launch</li>
                                         <li className="mb-2">• Token generation event</li>
@@ -119,7 +119,7 @@ const WhitePaper = () => {
                                     </ul>
                                 </div>
                                 <div className="roadmap-item mb-4">
-                                    <h5>Phase 2: Expansion (Q3-Q4 2024)</h5>
+                                    <h5>Phase 2: Expansion (Q2-Q3 2025)</h5>
                                     <ul className="list-unstyled">
                                         <li className="mb-2">• DAO implementation</li>
                                         <li className="mb-2">• Advanced search features</li>
@@ -127,7 +127,7 @@ const WhitePaper = () => {
                                     </ul>
                                 </div>
                                 <div className="roadmap-item">
-                                    <h5>Phase 3: Scaling (2025)</h5>
+                                    <h5>Phase 3: Scaling (Q4 2025)</h5>
                                     <ul className="list-unstyled">
                                         <li className="mb-2">• Cross-chain integration</li>
                                         <li className="mb-2">• AI agent marketplace</li>
