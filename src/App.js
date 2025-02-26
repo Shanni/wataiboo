@@ -26,6 +26,9 @@ function App() {
             </Routes>
             <footer className="py-3 mt-4 bg-dark text-white text-center">
                 <p>&copy; 2025 AI Agents Directory. All rights reserved.</p>
+                <p>
+                    made by <a href="https://x.com/shanni_talks" className="text-white" target="_blank" rel="noopener noreferrer">@shanni_talks</a>
+                </p>
             </footer>
             <Analytics />
         </div>

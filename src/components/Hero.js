@@ -8,9 +8,9 @@ const Hero = () => {
             <Container>
                 <Row className="align-items-center">
                     <Col lg={8} className="text-center text-lg-start">
-                        <h1 className="hero-title">Discover the Best AI Agents</h1>
+                        <h1 className="hero-title">Discover the Latest AI Agents</h1>
                         <p className="hero-subtitle px-3 px-lg-0">
-                            Explore our curated collection of cutting-edge AI tools and agents
+                            A New AI Product Every Day – Stay Ahead of the Curve!
                         </p>
                         <div className="hero-features">
                             <div className="feature">
