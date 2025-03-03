@@ -10,7 +10,7 @@ const Hero = () => {
                     <Col lg={8} className="text-center text-lg-start">
                         <h1 className="hero-title">Discover Tomorrow’s AI, Today</h1>
                         <p className="hero-subtitle px-3 px-lg-0">
-                        src/components/Hero.jsHandpicked AI Products & Agents, Updated Daily.
+                            Handpicked AI Products & Agents, Updated Daily.
                         </p>
                         <div className="hero-features">
                             <div className="feature">
